@@ -1,3 +1,5 @@
+import "./BalancePage.scss";
+
 function BalancePage() {
   return <div>BalancePage</div>;
 }
