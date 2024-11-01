@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import apiService from "../../services/api";
 import { User } from "../../types";
 import "./DashboardPage.scss";
-import BalanceCard from "@/components/BalanceCard/BalanceCard";
+import BalanceCard from "../../components/BalanceCard/BalanceCard";
 
 const DashboardPage: React.FC = () => {
   const navigate = useNavigate();

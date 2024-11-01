@@ -23,7 +23,6 @@ class ApiService {
   private api: AxiosInstance;
 
   constructor() {
-    // Update this line to use the Heroku URL when deployed
     this.api = axios.create({
       baseURL: "https://braincoins-2-server-e1411787b2ec.herokuapp.com",
       headers: {

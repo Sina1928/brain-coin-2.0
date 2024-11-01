@@ -1,6 +1,9 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
 import "./App.scss";
+import apiService from "./services/api";
+import { TableUser } from "./types";
 
 import LandingPage from "./pages/LandingPage/LandingPage";
 import BalancePage from "./pages/BalancePage/BalancePage";
@@ -11,6 +14,23 @@ import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import Header from "./components/Header/Header";
 
 function App() {
+  const [users, setUsers] = useState<TableUser[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const data = await apiService.getTopUsers();
+        setUsers(data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
   return (
     <BrowserRouter>
       <Header />
@@ -18,7 +38,10 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/balance" element={<BalancePage />} />
-        <Route path="/top-ten" element={<TopTenPage />} />
+        <Route
+          path="/top-ten"
+          element={<TopTenPage users={users} loading={loading} />}
+        />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="*" element={<NotFoundPage />} />
