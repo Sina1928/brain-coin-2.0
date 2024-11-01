@@ -1,68 +1,74 @@
-import axios from "axios";
-import { User, TableUser } from "../types";
+import axios, { AxiosInstance } from "axios";
 
-// Types for authentication
-export interface LoginResponse {
-  token: string;
-  user: {
-    id: number;
-    username: string;
-    email: string;
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  balances: {
+    "Umer coins": number;
+    "Mark bucks": number;
+    Kcoins: number;
+    CorgiCoins: number;
+    "Neo Coins": number;
   };
+  totalValueInMarkBucks: number;
 }
 
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+interface LoginResponse {
+  token: string;
+  user: User;
+}
 
-// Add response interceptor for consistent error handling
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    const errorMessage = error.response?.data?.error || "An error occurred";
-    throw new Error(errorMessage);
+class ApiService {
+  private api: AxiosInstance;
+
+  constructor() {
+    // Update this line to use the Heroku URL when deployed
+    this.api = axios.create({
+      baseURL:
+        import.meta.env.VITE_API_URL ||
+        "https://your-heroku-app-name.herokuapp.com/api", // Replace with your Heroku app URL
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    // Add request interceptor for auth token
+    this.api.interceptors.request.use(
+      (config) => {
+        const token = localStorage.getItem("token");
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
   }
-);
 
-// Auth endpoints
-export const login = async (
-  email: string,
-  password: string
-): Promise<LoginResponse> => {
-  const response = await api.post<LoginResponse>("/users/login", {
-    email,
-    password,
-  });
-  return response.data;
-};
+  // Auth methods
+  async login(email: string, password: string): Promise<LoginResponse> {
+    const response = await this.api.post<LoginResponse>("/users/login", {
+      email,
+      password,
+    });
+    return response.data;
+  }
 
-// User endpoints
-export const getUserProfile = async (userId: number) => {
-  const response = await api.get(`/users/profile/${userId}`);
-  return response.data;
-};
+  // User profile methods
+  async getUserProfile(): Promise<User> {
+    const response = await this.api.get<User>("/users/profile");
+    return response.data;
+  }
 
-// Balance endpoints
-export const getBalances = async (): Promise<User[]> => {
-  const response = await api.get<User[]>("/balance");
-  return response.data;
-};
+  // Top users methods
+  async getTopUsers(): Promise<User[]> {
+    const response = await this.api.get<User[]>("/top-ten"); // Adjusted to match your route
+    return response.data;
+  }
+}
 
-export const getTopTen = async (): Promise<TableUser[]> => {
-  const response = await api.get<User[]>("/top-ten");
-  return response.data.map((user) => ({
-    id: user.id,
-    username: user.username,
-    "Umer coins": user.balances["Umer coins"],
-    "Mark bucks": user.balances["Mark bucks"],
-    Kcoins: user.balances["Kcoins"],
-    CorgiCoins: user.balances["CorgiCoins"],
-    "Neo Coins": user.balances["Neo Coins"],
-    totalValueInMarkBucks: user.totalValueInMarkBucks,
-  }));
-};
-
-export default api;
+export const apiService = new ApiService();
+export default apiService;

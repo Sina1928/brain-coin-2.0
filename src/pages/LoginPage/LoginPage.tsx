@@ -1,7 +1,7 @@
 import { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { login } from "../../services/api";
+import apiService from "../../services/api";
 import "./LoginPage.scss";
 
 const LoginPage: React.FC = () => {
@@ -9,21 +9,19 @@ const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      const response = await login(email, password);
+      const response = await apiService.login(email, password);
       localStorage.setItem("token", response.token);
       localStorage.setItem("user", JSON.stringify(response.user));
       toast.success("Login successful!");
       navigate("/dashboard");
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Login failed");
-      setError(null);
+    } catch (error: any) {
+      toast.error(error.response?.data?.error || "Login failed");
     } finally {
       setIsLoading(false);
     }
@@ -35,8 +33,6 @@ const LoginPage: React.FC = () => {
         <div className="login-content">
           <h1>Welcome Back!</h1>
           <p>Enter your details to access your BrainCoins account</p>
-
-          {error && <div className="error-message">{error}</div>}
 
           <form onSubmit={handleSubmit} className="login-form">
             <div className="form-group">

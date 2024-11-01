@@ -22,8 +22,6 @@
     font-size: $text-xl;
     font-weight: 700;
     background: $gradient-primary;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
   }
 
   .nav-login-button {
@@ -47,8 +45,6 @@
     font-weight: 800;
     margin-bottom: $spacing-lg;
     background: $gradient-primary;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
   }
 
   .hero-text {

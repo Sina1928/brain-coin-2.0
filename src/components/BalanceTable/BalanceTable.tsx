@@ -6,16 +6,6 @@ interface BalanceTableProps {
 }
 
 const BalanceTable: React.FC<BalanceTableProps> = ({ users }) => {
-  const calculateTotalValue = (user: TableUser): number => {
-    return (
-      (user["Umer coins"] || 0) * (100 / 500) +
-      (user["Mark bucks"] || 0) +
-      (user["Kcoins"] || 0) * 500 +
-      (user["CorgiCoins"] || 0) * 500 +
-      (user["Neo Coins"] || 0) * 1000
-    );
-  };
-
   return (
     <table className="balance-table">
       <thead className="balance-table__header">
@@ -32,21 +22,27 @@ const BalanceTable: React.FC<BalanceTableProps> = ({ users }) => {
         </tr>
       </thead>
       <tbody className="balance-table__body">
-        {users.map((user) => {
-          const totalValue = calculateTotalValue(user);
-
-          return (
-            <tr className="balance-table__row" key={user.id}>
-              <td className="balance-table__cell">{user.username}</td>
-              <td className="balance-table__cell">{user["Umer coins"]}</td>
-              <td className="balance-table__cell">{user["Mark bucks"]}</td>
-              <td className="balance-table__cell">{user["Kcoins"]}</td>
-              <td className="balance-table__cell">{user["CorgiCoins"]}</td>
-              <td className="balance-table__cell">{user["Neo Coins"]}</td>
-              <td className="balance-table__cell">{totalValue.toFixed(2)}</td>
-            </tr>
-          );
-        })}
+        {users.map((user) => (
+          <tr className="balance-table__row" key={user.id}>
+            <td className="balance-table__cell">{user.username}</td>
+            <td className="balance-table__cell">
+              {user.balances["Umer coins"]}
+            </td>
+            <td className="balance-table__cell">
+              {user.balances["Mark bucks"]}
+            </td>
+            <td className="balance-table__cell">{user.balances["Kcoins"]}</td>
+            <td className="balance-table__cell">
+              {user.balances["CorgiCoins"]}
+            </td>
+            <td className="balance-table__cell">
+              {user.balances["Neo Coins"]}
+            </td>
+            <td className="balance-table__cell">
+              {user.totalValueInMarkBucks.toFixed(2)}
+            </td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );

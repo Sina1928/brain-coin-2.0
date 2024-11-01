@@ -1,68 +1,36 @@
-import { useState, useEffect } from "react";
-import BalanceCard from "../../components/BalanceCard/BalanceCard";
-import { Transaction, UserBalances } from "../../types";
-import api from "../../services/api";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import apiService from "../../services/api";
+import { User } from "../../types";
 import "./DashboardPage.scss";
-
-interface UserData {
-  username: string;
-  balances: UserBalances;
-  totalValueInMarkBucks: number;
-}
+import BalanceCard from "@/components/BalanceCard/BalanceCard";
 
 const DashboardPage: React.FC = () => {
+  const navigate = useNavigate();
+  const [userData, setUserData] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [userData, setUserData] = useState<UserData>({
-    username: "",
-    balances: {
-      "Umer coins": 0,
-      "Mark bucks": 0,
-      Kcoins: 0,
-      CorgiCoins: 0,
-      "Neo Coins": 0,
-    },
-    totalValueInMarkBucks: 0,
-  });
-
-  // Sample transactions with correct type
-  const sampleTransactions: Transaction[] = [
-    {
-      id: "1",
-      type: "incoming",
-      amount: 50,
-      currency: "Mark bucks",
-      from: "Alice Smith",
-      date: "2024-10-31 14:30",
-      userImage: "/images/alice.jpg",
-    },
-    {
-      id: "2",
-      type: "outgoing",
-      amount: 25,
-      currency: "Umer coins",
-      from: "Bob Johnson",
-      date: "2024-10-31 12:15",
-    },
-  ];
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await api.get<UserData>("/users/profile");
-        setUserData(response.data);
-        setIsLoading(false);
-      } catch (err) {
-        setError("Failed to fetch user data");
+        const data = await apiService.getUserProfile();
+        setUserData(data);
+      } catch (error: any) {
+        toast.error(error.response?.data?.error || "Failed to load profile");
+        if (error.response?.status === 401) {
+          navigate("/login");
+        }
+      } finally {
         setIsLoading(false);
       }
     };
 
     fetchUserData();
-  }, []);
+  }, [navigate]);
 
-  if (isLoading) return <div className="dashboard__loading">Loading...</div>;
-  if (error) return <div className="dashboard__error">{error}</div>;
+  if (isLoading) return <div>Loading...</div>;
+  if (!userData) return <div>Error loading profile</div>;
 
   return (
     <div className="dashboard">
@@ -76,7 +44,7 @@ const DashboardPage: React.FC = () => {
             username={userData.username}
             balances={userData.balances}
             totalValueInMarkBucks={userData.totalValueInMarkBucks}
-            recentTransactions={sampleTransactions}
+            // recentTransactions={sampleTransactions}
           />
         </div>
       </div>

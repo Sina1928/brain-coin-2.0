@@ -28,17 +28,26 @@ export interface UserBalances {
   "Neo Coins": number;
 }
 
+export interface Balances {
+  "Umer coins": number;
+  "Mark bucks": number;
+  Kcoins: number;
+  CorgiCoins: number;
+  "Neo Coins": number;
+}
+
 export interface User {
   id: number;
   username: string;
   email: string;
-  balances: UserBalances;
+  balances: Balances;
   totalValueInMarkBucks: number;
 }
 
-export interface TableUser extends UserBalances {
+export interface TableUser extends User {
   id: number;
   username: string;
+  balances: Balances;
   totalValueInMarkBucks: number;
 }
 

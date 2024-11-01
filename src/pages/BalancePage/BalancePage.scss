@@ -1,0 +1,52 @@
+@use "../../styles/partials/variables" as *;
+@use "../../styles/partials/mixins" as *;
+
+.balance {
+  padding: $spacing-xl;
+  min-height: 100vh;
+  background: $background-dark;
+
+  &__title {
+    text-align: center;
+    color: $text-primary;
+    font-size: $text-2xl;
+    font-weight: 700;
+    margin-bottom: $spacing-xl;
+  }
+
+  &__loading {
+    @include flex-center;
+    min-height: 50vh;
+    .loader {
+      color: $primary-light;
+      font-size: $text-lg;
+    }
+  }
+
+  &__error {
+    @include flex-center;
+    flex-direction: column;
+    min-height: 50vh;
+    color: #ff5252;
+    gap: $spacing-md;
+
+    button {
+      @include button-secondary;
+    }
+  }
+
+  &__no-data {
+    text-align: center;
+    color: $text-secondary;
+    margin-top: $spacing-xl;
+  }
+
+  @include mobile {
+    padding: $spacing-md;
+
+    &__title {
+      font-size: $text-xl;
+      margin-bottom: $spacing-lg;
+    }
+  }
+}
