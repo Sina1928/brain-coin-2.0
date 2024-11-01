@@ -1,0 +1,123 @@
+@use "../../styles/partials/variables" as *;
+@use "../../styles/partials/mixins" as *;
+
+.landing-page {
+  min-height: 100vh;
+  background: $background-dark;
+  color: $text-primary;
+}
+
+.landing-nav {
+  @include flex-between;
+  padding: $spacing-lg $spacing-xl;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+
+  .nav-logo {
+    font-size: $text-xl;
+    font-weight: 700;
+    background: $gradient-primary;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .nav-login-button {
+    @include button-secondary;
+    padding: $spacing-sm $spacing-lg;
+  }
+}
+
+.landing-main {
+  padding-top: 80px;
+}
+
+.hero-section {
+  text-align: center;
+  padding: $spacing-xl;
+  max-width: 800px;
+  margin: 0 auto;
+
+  h1 {
+    font-size: $text-4xl;
+    font-weight: 800;
+    margin-bottom: $spacing-lg;
+    background: $gradient-primary;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-text {
+    font-size: $text-lg;
+    color: $text-secondary;
+    margin-bottom: $spacing-xl;
+    line-height: 1.6;
+  }
+
+  .hero-button {
+    @include button-primary;
+    padding: $spacing-md $spacing-xl;
+    font-size: $text-lg;
+  }
+}
+
+.features-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: $spacing-lg;
+  padding: $spacing-xl;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .feature-card {
+    @include card-base;
+    padding: $spacing-xl;
+    text-align: center;
+    transition: $transition-base;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    h3 {
+      font-size: $text-xl;
+      margin-bottom: $spacing-md;
+      color: $primary-light;
+    }
+
+    p {
+      color: $text-secondary;
+      line-height: 1.6;
+    }
+  }
+}
+
+.landing-footer {
+  text-align: center;
+  padding: $spacing-xl;
+  color: $text-secondary;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+@include mobile {
+  .landing-nav {
+    padding: $spacing-md;
+  }
+
+  .hero-section {
+    padding: $spacing-lg;
+
+    h1 {
+      font-size: $text-3xl;
+    }
+  }
+
+  .features-section {
+    padding: $spacing-lg;
+    grid-template-columns: 1fr;
+  }
+}

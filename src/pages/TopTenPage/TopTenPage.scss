@@ -1,0 +1,39 @@
+@use "../../styles/partials/variables" as *;
+@use "../../styles/partials/mixins" as *;
+
+.top-ten-page {
+  padding: $spacing-xl;
+  min-height: 100vh;
+  background: $background-dark;
+
+  &__title {
+    text-align: center;
+    color: $text-primary;
+    font-size: $text-3xl;
+    font-weight: 700;
+    margin-bottom: $spacing-xl;
+
+    // @include fancy-text-shadow;
+  }
+
+  &__loading,
+  &__error {
+    @include flex-center;
+    min-height: 50vh;
+    color: $text-primary;
+    font-size: $text-lg;
+  }
+
+  &__error {
+    color: #ff5252;
+  }
+
+  @include mobile {
+    padding: $spacing-md;
+
+    &__title {
+      font-size: $text-2xl;
+      margin-bottom: $spacing-lg;
+    }
+  }
+}

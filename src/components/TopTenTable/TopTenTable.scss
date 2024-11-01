@@ -1,0 +1,102 @@
+@use "../../styles/partials/variables" as *;
+@use "../../styles/partials/mixins" as *;
+
+.top-ten-table {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: $background-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-lg;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+      padding: $spacing-md;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    th {
+      font-weight: 600;
+      color: $text-secondary;
+      text-transform: uppercase;
+      font-size: $text-sm;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      color: $text-primary;
+      font-size: $text-base;
+    }
+
+    tbody {
+      tr {
+        transition: $transition-base;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        &.rank-1 {
+          background: rgba(255, 215, 0, 0.1);
+          .rank {
+            background: #ffd700;
+          }
+        }
+
+        &.rank-2 {
+          background: rgba(192, 192, 192, 0.1);
+          .rank {
+            background: #c0c0c0;
+          }
+        }
+
+        &.rank-3 {
+          background: rgba(205, 127, 50, 0.1);
+          .rank {
+            background: #cd7f32;
+          }
+        }
+      }
+    }
+
+    .rank-cell {
+      width: 60px;
+
+      .rank {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        font-weight: 600;
+        font-size: $text-sm;
+      }
+    }
+
+    .total-value {
+      font-weight: 600;
+      color: $primary-light;
+    }
+  }
+
+  @include mobile {
+    padding: $spacing-sm;
+    overflow-x: auto;
+
+    table {
+      th,
+      td {
+        padding: $spacing-sm;
+        font-size: $text-sm;
+      }
+    }
+  }
+}
