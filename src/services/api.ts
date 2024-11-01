@@ -25,9 +25,7 @@ class ApiService {
   constructor() {
     // Update this line to use the Heroku URL when deployed
     this.api = axios.create({
-      baseURL:
-        import.meta.env.VITE_API_URL ||
-        "https://your-heroku-app-name.herokuapp.com/api", // Replace with your Heroku app URL
+      baseURL: "https://braincoins-2-server-e1411787b2ec.herokuapp.com",
       headers: {
         "Content-Type": "application/json",
       },
@@ -65,10 +63,22 @@ class ApiService {
 
   // Top users methods
   async getTopUsers(): Promise<User[]> {
-    const response = await this.api.get<User[]>("/top-ten"); // Adjusted to match your route
-    return response.data;
+    try {
+      const response = await this.api.get<User[]>("/top-ten");
+      console.log("Fetched users: ", response.data);
+
+      // Check if response.data is an array before returning
+      if (Array.isArray(response.data)) {
+        return response.data;
+      } else {
+        console.warn("Expected an array but received:", response.data);
+        return []; // Return an empty array if the data format is not as expected
+      }
+    } catch (error) {
+      console.error("Error fetching top users:", error);
+      return []; // Return an empty array on error
+    }
   }
 }
-
 export const apiService = new ApiService();
 export default apiService;
