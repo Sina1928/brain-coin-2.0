@@ -36,7 +36,7 @@ class ApiService {
       headers: {
         "Content-Type": "application/json",
       },
-      withCredentials: true, // Important for CORS
+      withCredentials: true,
     });
 
     // Request interceptor
@@ -56,14 +56,36 @@ class ApiService {
     // Response interceptor
     this.api.interceptors.response.use(
       (response) => response,
-      (error: AxiosError<ErrorResponse>) => {
-        if (error.response?.status === 401) {
-          localStorage.removeItem("token");
+      async (error: AxiosError<ErrorResponse>) => {
+        // Don't redirect to login page if this is a login request
+        const isLoginRequest = error.config?.url?.includes("/login");
+
+        if (error.response?.status === 401 && !isLoginRequest) {
+          this.clearAuth();
           window.location.href = "/login";
         }
         return Promise.reject(error);
       }
     );
+  }
+
+  private clearAuth(): void {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+  }
+
+  private setAuth(token: string, user: User): void {
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+  }
+
+  public getToken(): string | null {
+    return localStorage.getItem("token");
+  }
+
+  public getUser(): User | null {
+    const userStr = localStorage.getItem("user");
+    return userStr ? JSON.parse(userStr) : null;
   }
 
   // Auth methods
@@ -74,14 +96,16 @@ class ApiService {
         password,
       });
 
-      if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
+      if (response.data.token && response.data.user) {
+        this.setAuth(response.data.token, response.data.user);
+        return response.data;
+      } else {
+        throw new Error("Invalid response from server");
       }
-
-      return response.data;
     } catch (error) {
       const axiosError = error as AxiosError<ErrorResponse>;
       const errorMessage = axiosError.response?.data?.message || "Login failed";
+      this.clearAuth(); // Clear any existing auth data
       throw new Error(errorMessage);
     }
   }
@@ -89,6 +113,11 @@ class ApiService {
   // User profile methods
   async getUserProfile(): Promise<User> {
     try {
+      const token = this.getToken();
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
       const response = await this.api.get<User>("/users/profile");
       return response.data;
     } catch (error) {
@@ -103,24 +132,22 @@ class ApiService {
   async getTopUsers(): Promise<User[]> {
     try {
       const response = await this.api.get<User[]>("/top-ten");
-
-      if (Array.isArray(response.data)) {
-        return response.data;
-      }
-
-      console.warn("Expected an array but received:", response.data);
-      return [];
+      return Array.isArray(response.data) ? response.data : [];
     } catch (error) {
-      const axiosError = error as AxiosError<ErrorResponse>;
-      console.error("Error fetching top users:", axiosError.message);
-      throw error;
+      console.error("Error fetching top users:", error);
+      return [];
     }
   }
 
   // Logout method
   logout(): void {
-    localStorage.removeItem("token");
+    this.clearAuth();
     window.location.href = "/login";
+  }
+
+  // Check if user is authenticated
+  isAuthenticated(): boolean {
+    return !!this.getToken() && !!this.getUser();
   }
 }
 

@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 import "./App.scss";
 import apiService from "./services/api";
 import { TableUser } from "./types";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 import LandingPage from "./pages/LandingPage/LandingPage";
 import BalancePage from "./pages/BalancePage/BalancePage";
@@ -43,7 +44,14 @@ function App() {
           element={<TopTenPage users={users} loading={loading} />}
         />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
