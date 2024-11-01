@@ -22,7 +22,7 @@ interface LoginResponse {
 class ApiService {
   private api: AxiosInstance;
   private readonly baseURL =
-    "https://braincoins-2-server-e1411787b2ec.herokuapp.com/api"; // Note the /api prefix
+    "https://braincoins-2-server-e1411787b2ec.herokuapp.com"; // Note the /api prefix
 
   constructor() {
     this.api = axios.create({
