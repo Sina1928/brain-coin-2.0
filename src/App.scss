@@ -1,0 +1,9 @@
+@use "./styles/partials/variables" as *;
+@use "./styles/partials/mixins" as *;
+
+body {
+  background: $background-dark;
+  font-family: $font-primary;
+  color: $text-primary;
+  min-height: 100vh;
+}

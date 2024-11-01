@@ -1,0 +1,63 @@
+@use "../../styles/partials/variables" as *;
+@use "../../styles/partials/mixins" as *;
+
+.dashboard {
+  padding: $spacing-lg;
+  min-height: 100vh;
+  background-color: $background-dark;
+
+  &__header {
+    margin-bottom: $spacing-xl;
+
+    h1 {
+      color: $text-primary;
+      font-size: $text-2xl;
+      font-weight: 600;
+    }
+  }
+
+  &__content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: $spacing-lg;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  &__balance-card {
+    width: 100%;
+
+    @include mobile {
+      grid-column: 1 / -1;
+    }
+  }
+
+  &__loading,
+  &__error {
+    @include flex-center;
+    min-height: 50vh;
+    color: $text-primary;
+    font-size: $text-lg;
+  }
+
+  &__error {
+    color: #ff5252;
+  }
+}
+
+// Add loading animation
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+.dashboard__loading {
+  animation: pulse 1.5s infinite ease-in-out;
+}
