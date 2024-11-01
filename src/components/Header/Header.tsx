@@ -1,7 +1,7 @@
 import "./Header.scss";
 
 function Header() {
-  return <div>Header</div>;
+  return <div className="title">BrainCoins</div>;
 }
 
 export default Header;
